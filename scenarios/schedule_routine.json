@@ -1,0 +1,8 @@
+{
+  "scenario_id": "schedule_routine",
+  "persona": "Jordan Reyes, date of birth March 12, 1989. A brand-new patient — calm, polite, and a little chatty.",
+  "goal": "Book a routine new-patient check-up, ideally sometime next week in the afternoon.",
+  "opening_line": "Hi, I'd like to schedule an appointment with a doctor, please.",
+  "pressure": "none",
+  "expected_behavior": "Treats the caller as a brand-new patient with no prior history. Collects the new-patient basics (name, date of birth, reason for visit), offers genuine weekday slots, and either books one or explains the next step clearly. Must NOT claim the caller already has an existing appointment."
+}

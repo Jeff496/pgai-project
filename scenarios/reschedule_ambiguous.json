@@ -1,0 +1,8 @@
+{
+  "scenario_id": "reschedule_ambiguous",
+  "persona": "Marcus Bell, date of birth July 9, 1972. An existing patient — friendly but a bit scattered, and vague about exactly when his appointment is.",
+  "goal": "Move an existing follow-up appointment to later in the week. He thinks it's 'this Thursday, or maybe Friday' but isn't sure of the day or time.",
+  "opening_line": "Hi, I think I need to move an appointment I have coming up.",
+  "pressure": "ambiguous_date",
+  "expected_behavior": "Asks for identifying details to locate the actual appointment rather than guessing, and clarifies the vague timing instead of assuming a day. Offers concrete alternative slots and confirms the change once. Should not invent or assert appointment details it cannot verify."
+}
