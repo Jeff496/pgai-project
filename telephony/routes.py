@@ -241,3 +241,33 @@ async def amd_result(request: Request) -> Response:
         logger.warning(f"[TELEPHONY] No active session for AMD result (call {call_sid})")
 
     return Response(status_code=204)
+
+
+async def recording_status(request: Request) -> Response:
+    """Receive Twilio's recording-status callback when a recording is ready.
+
+    Twilio POSTs here once the call recording finishes processing (we
+    subscribe to the "completed" event only), with form data including:
+      - CallSid: The call this recording belongs to
+      - RecordingSid: The recording's SID
+      - RecordingUrl: Base URL of the recording (append .mp3 to download)
+      - RecordingStatus: "completed"
+      - RecordingDuration: Length in seconds
+      - RecordingChannels: "2" for the dual-channel recording
+
+    This fires the moment the recording is ready, so the harness can fetch
+    it immediately instead of polling recordings.list after every call.
+    """
+    form_data = await request.form()
+    call_sid = form_data.get("CallSid", "")
+    recording_sid = form_data.get("RecordingSid", "")
+    recording_url = form_data.get("RecordingUrl", "")
+    recording_status = form_data.get("RecordingStatus", "")
+    recording_duration = form_data.get("RecordingDuration", "")
+
+    logger.info(
+        f"[TELEPHONY] Recording ready for {call_sid}: status={recording_status} "
+        f"sid={recording_sid} duration={recording_duration}s url={recording_url}.mp3"
+    )
+
+    return Response(status_code=204)
