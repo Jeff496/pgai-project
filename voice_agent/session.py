@@ -106,17 +106,12 @@ class VoiceAgentSession:
         self._amd_answered_by = answered_by
         self._amd_result.set()
         logger.info(f"[SESSION:{self.call_sid}] AMD result: {answered_by}")
-
-        # Late AMD result — voice agent is already running
-        if self._connection is not None and answered_by.startswith("machine_"):
-            logger.info(f"[SESSION:{self.call_sid}] Late AMD machine detection — switching to voicemail")
-            asyncio.create_task(self._switch_to_voicemail())
+        # (removed late-detection voicemail switch).  this repo is meant to call another voice agent.
 
     def _is_voicemail(self) -> bool:
-        """Check if AMD detected a voicemail/answering machine."""
-        if self._amd_answered_by is None:
-            return False
-        return self._amd_answered_by.startswith("machine_")
+        """Voicemail check is off — this repo calls another voice agent, not a
+        line that might go to an answering machine."""
+        return False
 
     # ------------------------------------------------------------------
     # Lifecycle
