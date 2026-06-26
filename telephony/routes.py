@@ -25,6 +25,13 @@ from starlette.websockets import WebSocket
 
 from config import ENDPOINT_SECRET
 from voice_agent.session import VoiceAgentSession
+from telephony.call_logging import (
+    artifact_key,
+    call_scenarios,
+    scenario_id_from_context,
+    start_call_log,
+    stop_call_log,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -132,6 +139,10 @@ async def make_call(request: Request) -> Response:
     # Store lead context for when the Twilio WebSocket connects
     _pending_leads[call_sid] = lead_context
 
+    # Remember which scenario this call is for, so post-call consumers (the
+    # recording webhook fires after the session is gone) can recover it.
+    call_scenarios[call_sid] = scenario_id_from_context(lead_context)
+
     return JSONResponse({
         "call_sid": call_sid,
         "status": "initiated",
@@ -159,6 +170,7 @@ async def twilio_websocket(websocket: WebSocket):
     call_sid = None
     stream_sid = None
     session = None
+    call_log_handler = None
 
     try:
         # Wait for the Twilio "start" event to get call metadata.
@@ -176,6 +188,17 @@ async def twilio_websocket(websocket: WebSocket):
 
         # Retrieve the lead context stored when the call was placed
         lead_context = _pending_leads.pop(call_sid, {})
+
+        # Start capturing this call's logs to calls/<scenario_id>__<call_sid>.log
+        # and echo the scenario<->call_sid pairing so the whole call can be
+        # traced from one id.
+        scenario_id = call_scenarios.get(call_sid) or scenario_id_from_context(lead_context)
+        call_log_handler = start_call_log(call_sid, scenario_id)
+        logger.info(
+            f"[TELEPHONY] Call {call_sid} -> scenario={scenario_id} "
+            f"(artifacts: {artifact_key(scenario_id, call_sid)}.*)"
+        )
+
         if not lead_context:
             logger.warning(f"[TELEPHONY] No lead context found for call {call_sid} - using defaults")
             from backend.lead_service import build_default_lead
@@ -216,6 +239,8 @@ async def twilio_websocket(websocket: WebSocket):
         if call_sid and call_sid in active_sessions:
             del active_sessions[call_sid]
         logger.info(f"[TELEPHONY] Call {call_sid} ended")
+        # Detach the per-call log handler last, so the line above is captured.
+        stop_call_log(call_log_handler)
 
 
 async def amd_result(request: Request) -> Response:
@@ -265,9 +290,15 @@ async def recording_status(request: Request) -> Response:
     recording_status = form_data.get("RecordingStatus", "")
     recording_duration = form_data.get("RecordingDuration", "")
 
+    # Recover the scenario this call belonged to (the session is already gone
+    # by now) so the recording lines up with the rest of the call's artifacts.
+    scenario_id = call_scenarios.get(call_sid, "unknown")
+
     logger.info(
-        f"[TELEPHONY] Recording ready for {call_sid}: status={recording_status} "
-        f"sid={recording_sid} duration={recording_duration}s url={recording_url}.mp3"
+        f"[TELEPHONY] Recording ready for {call_sid} (scenario={scenario_id}): "
+        f"status={recording_status} sid={recording_sid} "
+        f"duration={recording_duration}s url={recording_url}.mp3 "
+        f"-> save as calls/{artifact_key(scenario_id, call_sid)}.mp3"
     )
 
     return Response(status_code=204)
