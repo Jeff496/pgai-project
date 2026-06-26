@@ -20,7 +20,7 @@ from starlette.routing import Route, WebSocketRoute
 from starlette.responses import PlainTextResponse
 
 from config import SERVER_HOST, SERVER_PORT, SERVER_EXTERNAL_URL, DEEPGRAM_API_KEY
-from telephony.routes import make_call, twilio_websocket, amd_result
+from telephony.routes import make_call, twilio_websocket, amd_result, recording_status
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -48,6 +48,7 @@ app = Starlette(
         Route("/make-call", make_call, methods=["POST"]),
         WebSocketRoute("/twilio", twilio_websocket),
         Route("/amd-result", amd_result, methods=["POST"]),
+        Route("/recording-status", recording_status, methods=["POST"]),
         Route("/", dashboard),
     ],
 )

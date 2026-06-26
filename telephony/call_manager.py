@@ -57,6 +57,10 @@ def place_call(to: str) -> str:
     # Strip protocol prefix - TwiML needs a bare hostname for wss://
     host = SERVER_EXTERNAL_URL.replace("https://", "").replace("http://", "").rstrip("/")
 
+    # Twilio POSTs here once the call recording is finished and ready to fetch,
+    # so we don't have to poll recordings.list after every call.
+    recording_callback_url = f"{SERVER_EXTERNAL_URL.rstrip('/')}/recording-status"
+
     # Build inline TwiML that tells Twilio to stream audio to our WebSocket
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
@@ -67,6 +71,7 @@ def place_call(to: str) -> str:
 
     logger.info(f"[CALL_MANAGER] Placing call to {to}")
     logger.info(f"[CALL_MANAGER] Audio stream -> wss://{host}/twilio")
+    logger.info(f"[CALL_MANAGER] Recording callback -> {recording_callback_url}")
 
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
@@ -76,6 +81,9 @@ def place_call(to: str) -> str:
         twiml=twiml,
         record=True,
         recording_channels="dual",
+        recording_status_callback=recording_callback_url,
+        recording_status_callback_event=["completed"],
+        recording_status_callback_method="POST",
     )
 
     logger.info(f"[CALL_MANAGER] Call initiated - SID: {call.sid}")
