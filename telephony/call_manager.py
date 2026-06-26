@@ -57,9 +57,6 @@ def place_call(to: str) -> str:
     # Strip protocol prefix - TwiML needs a bare hostname for wss://
     host = SERVER_EXTERNAL_URL.replace("https://", "").replace("http://", "").rstrip("/")
 
-    # Build the AMD callback URL
-    amd_callback_url = f"{SERVER_EXTERNAL_URL.rstrip('/')}/amd-result"
-
     # Build inline TwiML that tells Twilio to stream audio to our WebSocket
     twiml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <Response>
@@ -70,7 +67,6 @@ def place_call(to: str) -> str:
 
     logger.info(f"[CALL_MANAGER] Placing call to {to}")
     logger.info(f"[CALL_MANAGER] Audio stream -> wss://{host}/twilio")
-    logger.info(f"[CALL_MANAGER] AMD callback -> {amd_callback_url}")
 
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
@@ -78,11 +74,8 @@ def place_call(to: str) -> str:
         to=to,
         from_=TWILIO_PHONE_NUMBER,
         twiml=twiml,
-        # Answering Machine Detection (async)
-        machine_detection="DetectMessageEnd",
-        async_amd=True,
-        async_amd_status_callback=amd_callback_url,
-        async_amd_status_callback_method="POST",
+        record=True,
+        recording_channels="dual",
     )
 
     logger.info(f"[CALL_MANAGER] Call initiated - SID: {call.sid}")
