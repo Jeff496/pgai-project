@@ -16,7 +16,9 @@ The server must be publicly accessible (via Fly.io, ngrok, etc.) because
 Twilio needs to open a WebSocket connection back to us.
 """
 import logging
+import os
 
+import httpx
 from twilio.rest import Client
 
 from config import (
@@ -88,3 +90,51 @@ def place_call(to: str) -> str:
 
     logger.info(f"[CALL_MANAGER] Call initiated - SID: {call.sid}")
     return call.sid
+
+
+def download_recording(call_sid: str, filename_stem: str | None = None, calls_dir: str = "calls") -> str | None:
+    """Download a call's dual-channel recording mp3 from Twilio.
+
+    Looks up the recording for `call_sid` via the Twilio REST API and writes it
+    to calls/<stem>.mp3.  `filename_stem` defaults to the call_sid; the harness
+    passes "<scenario_id>__<call_sid>" so the audio lines up with the call's
+    other artifacts (log, transcript, outcome).
+
+    The recording was created with recording_channels="dual", so the .mp3 is a
+    2-channel file — one call leg per channel.
+
+    Returns the saved path, or None if the call has no recording yet.
+    """
+    if not all([TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN]):
+        raise ValueError("Missing Twilio credentials (TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN).")
+
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    recordings = client.recordings.list(call_sid=call_sid, limit=1)
+    if not recordings:
+        logger.warning(f"[CALL_MANAGER] No recording found for call {call_sid}")
+        return None
+
+    recording = recordings[0]
+    media_url = (
+        f"https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}"
+        f"/Recordings/{recording.sid}.mp3"
+    )
+
+    stem = filename_stem or call_sid
+    os.makedirs(calls_dir, exist_ok=True)
+    out_path = os.path.join(calls_dir, f"{stem}.mp3")
+
+    logger.info(f"[CALL_MANAGER] Downloading recording {recording.sid} ({recording.duration}s) -> {out_path}")
+    with httpx.stream(
+        "GET", media_url,
+        auth=(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN),
+        follow_redirects=True,
+        timeout=60.0,
+    ) as resp:
+        resp.raise_for_status()
+        with open(out_path, "wb") as f:
+            for chunk in resp.iter_bytes():
+                f.write(chunk)
+
+    logger.info(f"[CALL_MANAGER] Saved recording -> {out_path}")
+    return out_path
