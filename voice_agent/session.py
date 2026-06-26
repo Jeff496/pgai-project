@@ -88,6 +88,11 @@ class VoiceAgentSession:
         # Tasks
         self._listen_task = None
         self._audio_task = None
+        self._heartbeat_task = None
+
+        # Media-flow diagnostics (to spot inbound audio stalls / drops)
+        self._twilio_media_recv = 0   # media frames received from Twilio (inbound)
+        self._agent_audio_chunks = 0  # audio chunks received from Deepgram (our agent's voice)
 
         # Silence detection
         self._silence_monitor = None
@@ -129,6 +134,9 @@ class VoiceAgentSession:
         # runs for the entire lifetime of the Twilio WebSocket.  We never
         # cancel this task; we change self._audio_mode to control behavior.
         self._audio_task = asyncio.create_task(self._twilio_audio_loop())
+
+        # Start the media-flow heartbeat so an inbound audio stall/drop is visible.
+        self._heartbeat_task = asyncio.create_task(self._media_heartbeat())
 
         # Connect to Deepgram Voice Agent API immediately.
         logger.info(f"[SESSION:{self.call_sid}] Starting voice agent")
@@ -290,7 +298,7 @@ class VoiceAgentSession:
             self._silence_monitor.stop()
 
         # Cancel tasks
-        for task in [self._audio_task, self._listen_task]:
+        for task in [self._audio_task, self._listen_task, self._heartbeat_task]:
             if task and not task.done():
                 task.cancel()
                 try:
@@ -350,6 +358,7 @@ class VoiceAgentSession:
         try:
             # Binary audio -> forward to Twilio
             if isinstance(message, bytes):
+                self._agent_audio_chunks += 1
                 audio_b64 = base64.b64encode(message).decode("utf-8")
                 await self.twilio_ws.send_json({
                     "event": "media",
@@ -474,6 +483,29 @@ class VoiceAgentSession:
     # Audio forwarding
     # ------------------------------------------------------------------
 
+    async def _media_heartbeat(self, interval: float = 3.0):
+        """Watchdog that logs only when inbound audio stalls.
+
+        Twilio streams audio frames continuously while the call is up (~50/sec,
+        even during silence), so inbound should never flatline mid-conversation.
+        We stay silent while healthy and warn only when an interval sees zero
+        inbound frames — i.e. the other party's audio has stopped reaching us
+        (the condition that preceded the earlier abnormal call drop).
+        """
+        last_in = 0
+        try:
+            while True:
+                await asyncio.sleep(interval)
+                d_in = self._twilio_media_recv - last_in
+                last_in = self._twilio_media_recv
+                if d_in == 0 and self._audio_mode == "forwarding":
+                    logger.warning(
+                        f"[SESSION:{self.call_sid}] NO INBOUND AUDIO for ~{interval:.0f}s "
+                        f"(total in={self._twilio_media_recv}) — media stream may be stalling"
+                    )
+        except asyncio.CancelledError:
+            raise
+
     async def _twilio_audio_loop(self):
         """Read from the Twilio WebSocket for the entire lifetime of the call.
 
@@ -495,6 +527,7 @@ class VoiceAgentSession:
                 data = json.loads(message)
 
                 if data.get("event") == "media":
+                    self._twilio_media_recv += 1
                     if self._audio_mode == "buffering":
                         payload = data["media"]["payload"]
                         audio_bytes = base64.b64decode(payload)

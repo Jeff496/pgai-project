@@ -25,6 +25,9 @@ Thumbs.db
 # Setup wizard state
 .setup_state.json
 
+# Per-call artifacts (logs, recordings, transcripts, outcomes)
+calls/
+
 # Misc
 .cursorindexingignore
 .specstory/
