@@ -121,6 +121,14 @@ async def make_call(request: Request) -> Response:
         "source": lead.source,
     }
 
+    # Pass scenario/persona fields straight through to the session context so
+    # the patient persona can be driven per call (the runner, or a --lead-file).
+    # The agent prompt reads these; missing ones fall back to persona defaults.
+    if lead_data:
+        for field in ("scenario_id", "persona", "goal", "opening_line", "pressure", "expected_behavior"):
+            if field in lead_data:
+                lead_context[field] = lead_data[field]
+
     logger.info(f"[TELEPHONY] Initiating call to {phone_number} (lead: {lead.lead_id})")
 
     # Place the call via Twilio

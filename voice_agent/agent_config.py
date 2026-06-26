@@ -6,15 +6,17 @@ This configures Deepgram's Voice Agent API with:
   - Speech-to-text (Deepgram Flux)
   - LLM (configurable, defaults to gpt-4o-mini)
   - Text-to-speech (Deepgram Aura)
-  - System prompt (insurance lead follow-up agent)
-  - Function definitions (check_availability, book_appointment, update_lead)
+  - System prompt (a PATIENT calling a clinic — the persona under test)
+  - Function definitions (just end_call)
 
-The system prompt is built dynamically using lead context data injected from
-the POST /make-call request.  This means the agent knows the caller's name,
-property details, and quote request before the conversation starts.
+This bot role-plays a *patient* calling another voice agent so we can probe
+that agent for bugs.  The persona is built dynamically per call from a
+scenario's fields (persona, goal, opening_line, pressure), injected via the
+lead-context path from POST /make-call.  Each scenario is a context payload;
+the runner reuses this path rather than hardcoding personas here.
 
-To customize the agent's behavior, modify the prompt template and functions below.
-To swap the LLM or voice, change LLM_MODEL / VOICE_MODEL in your .env file.
+To customize behavior, edit the prompt template and the pressure behaviors
+below.  To swap the LLM or voice, change LLM_MODEL / VOICE_MODEL in your .env.
 """
 from datetime import date
 
@@ -54,26 +56,107 @@ _SPEAK_PROVIDERS = {
 
 
 # ---------------------------------------------------------------------------
-# System prompt template
+# Persona defaults
 # ---------------------------------------------------------------------------
-# This prompt follows voice-specific best practices from docs/PROMPT_GUIDE.md.
-# Lead context is injected at call time via string formatting.
+# Used when a call arrives without scenario fields (e.g. a bare make_call with
+# no lead file).  They mirror the original hardcoded persona so default
+# behavior is unchanged; scenarios override them per call.
+DEFAULT_PERSONA = (
+    "Jordan Reyes, date of birth March 12, 1989. A new patient — calm, "
+    "polite, and a little chatty."
+)
+DEFAULT_GOAL = (
+    "Book a routine check-up appointment, ideally sometime next week in the "
+    "afternoon."
+)
+DEFAULT_OPENING_LINE = "Hi, I'd like to schedule an appointment with a doctor, please."
 
+
+# ---------------------------------------------------------------------------
+# Pressure behaviors
+# ---------------------------------------------------------------------------
+# A scenario's `pressure` field maps to one extra line of *natural* behavior,
+# woven into the prompt so the caller stays a real improvising person — never a
+# mechanical trigger.  "none" adds nothing.
+_PRESSURE_BEHAVIORS = {
+    "none": "",
+    "ambiguous_date": (
+        "- Be vague about timing at first — say things like \"sometime next "
+        "week\" or \"maybe Thursday, or was it Friday?\" — and make them work "
+        "to pin you down to an exact day and time."
+    ),
+    "interruption": (
+        "- You're eager and sometimes start talking before they've quite "
+        "finished, or jump in with a follow-up mid-sentence, the way real "
+        "people do on the phone."
+    ),
+    "out_of_scope": (
+        "- At some natural point, ask for something the front desk probably "
+        "can't handle (a medical opinion, a billing dispute, prescription "
+        "advice) and see how they deal with it before getting back on track."
+    ),
+    "impatient": (
+        "- You're short on time and a little impatient. Push to get things "
+        "done quickly, cut off long explanations, and show mild frustration "
+        "if they're slow or repeat themselves."
+    ),
+    "background_noise": (
+        "- You're calling from somewhere noisy and distracted. Now and then "
+        "mishear something, ask them to repeat it, or trail off and come back."
+    ),
+}
+
+
+# ---------------------------------------------------------------------------
+# System prompt
+# ---------------------------------------------------------------------------
 _TODAY = date.today()
 _TODAY_STR = _TODAY.strftime("%A, %B %-d, %Y")  # e.g. "Monday, February 24, 2026"
 
 
-def _build_system_prompt(lead_context: dict) -> str:
-    """Build the system prompt with lead data injected.
+def _build_system_prompt(context: dict) -> str:
+    """Build the patient persona's system prompt from a scenario context.
 
     Args:
-        lead_context: Dict with lead fields (first_name, last_name,
-                      property_address, property_type, etc.)
+        context: Scenario fields — `persona` (who the caller is), `goal` (why
+                 they're calling), and optional `pressure` (a twist). Missing
+                 fields fall back to the module defaults.
     """
-    return f"""You are a patient calling a medical clinic to schedule an appointment.
-You are a real person, not an AI — never reveal you are automated.
+    persona = context.get("persona") or DEFAULT_PERSONA
+    goal = context.get("goal") or DEFAULT_GOAL
+    pressure = context.get("pressure") or "none"
+    pressure_note = _PRESSURE_BEHAVIORS.get(pressure, "")
+
+    behavior_lines = [
+        "- You placed this call. Let them greet you first, then explain why "
+        "you're calling in your own words.",
+        "- Talk like a real person: improvise, react, and make up believable "
+        "details (dates, names, symptoms, insurance) on the spot if asked. "
+        "Never read a list or sound scripted.",
+        "- Keep each turn short — usually one or two sentences, like natural "
+        "phone speech.",
+        "- Pursue your goal, but go with the flow. Answer their questions as "
+        "your character would; if they wander off, gently steer back.",
+        "- Don't be a robot or a pushover — it's fine to be chatty, hesitant, "
+        "or particular, depending on who you are.",
+        "- Only wrap up once your goal is clearly handled (or clearly can't "
+        "be). Then thank them, say a natural goodbye, and end the call. Don't "
+        "hang up early, and don't narrate that you're ending it.",
+    ]
+    if pressure_note:
+        behavior_lines.append(pressure_note)
+
+    behavior = "\n".join(behavior_lines)
+
+    return f"""You are a real person calling a medical clinic's front desk. You are NOT an AI and must never reveal or hint that you are automated — if asked, you're just a person on the phone.
 
 TODAY'S DATE: {_TODAY_STR}
+
+WHO YOU ARE:
+{persona}
+
+WHY YOU'RE CALLING:
+{goal}
 
 VOICE FORMATTING RULES:
 You are a VOICE agent. Your responses are spoken aloud via text-to-speech.
@@ -84,146 +167,43 @@ You are a VOICE agent. Your responses are spoken aloud via text-to-speech.
 - Speak dates and times naturally (say "Thursday at two PM" not "2026-03-05T14:00")
 - NEVER announce or narrate function calls. Do NOT say "let me check", "hold on", "one moment while I look that up", or anything similar. Just present the results directly when they come back.
 
-WHO YOU ARE:
-- Name: Jordan Reyes, date of birth March 12, 1989. New patient.
-- Goal: book a routine check-up, ideally next week in the afternoon.
-
 HOW TO BEHAVE:
-- You called them — let the receptionist greet you, then state what you need.
-- One or two sentences per turn. Answer their questions as Jordan would; invent reasonable details if asked.
-- Stay on task. Gently steer back if they wander. When your goal is met (or clearly can't be), thank them and end the call.
+{behavior}
 """
 
 
-def _build_greeting(lead_context: dict) -> str:
-    return "Hi, I'd like to schedule an appointment with a doctor, please."
+def _build_greeting(context: dict) -> str:
+    """The caller's opening line, spoken first when the call connects."""
+    return context.get("opening_line") or DEFAULT_OPENING_LINE
 
 
 # ---------------------------------------------------------------------------
 # Function definitions
 # ---------------------------------------------------------------------------
-# Each function maps to a method in backend/lead_service.py.
-# See docs/FUNCTION_GUIDE.md for definition best practices.
+# The caller is a patient, not a service agent, so it only needs to hang up.
+# end_call is dispatched in voice_agent/session.py.
 
 FUNCTIONS = [
     ThinkSettingsV1FunctionsItem(
-        name="check_availability",
-        description="""Check available consultation time slots with licensed insurance agents.
-
-Call this when you're ready to schedule a consultation for the lead. Returns available date/time options with agent names.
-
-This is a read-only lookup - no confirmation needed before calling.""",
-        parameters={
-            "type": "object",
-            "properties": {
-                "lead_id": {
-                    "type": "string",
-                    "description": "The lead ID from the lead context"
-                },
-                "timezone": {
-                    "type": "string",
-                    "description": "The lead's timezone (e.g. 'America/Chicago'). Infer from their state if not stated."
-                }
-            },
-            "required": ["lead_id"]
-        }
-    ),
-    ThinkSettingsV1FunctionsItem(
-        name="book_appointment",
-        description="""Book a consultation slot with a licensed insurance agent.
-
-IMPORTANT: Before calling this function, you MUST:
-1. Call check_availability to get available slots
-2. Present 2-3 options to the person
-3. WAIT for them to select a time
-4. THEN call this function with the selected slot
-
-Only call this after the person has chosen a specific time.""",
-        parameters={
-            "type": "object",
-            "properties": {
-                "lead_id": {
-                    "type": "string",
-                    "description": "The lead ID from the lead context"
-                },
-                "selected_slot": {
-                    "type": "string",
-                    "description": "The datetime of the selected slot (ISO 8601 format from check_availability results)"
-                },
-                "agent_name": {
-                    "type": "string",
-                    "description": "The name of the licensed agent for the selected slot"
-                }
-            },
-            "required": ["lead_id", "selected_slot", "agent_name"]
-        }
-    ),
-    ThinkSettingsV1FunctionsItem(
-        name="update_lead",
-        description="""Post back the call outcome, disposition, and gathered information. Call this at the END of every call, regardless of outcome.
-
-This is the final record of the call. Include everything relevant: what was verified, what new info was gathered, the disposition assessment, and a natural language summary a human agent can read.
-
-call_outcome values: appointment_scheduled, callback_requested, not_interested, not_viable, no_answer_voicemail_left
-disposition values: qualified, qualified_with_concerns, not_viable""",
-        parameters={
-            "type": "object",
-            "properties": {
-                "lead_id": {
-                    "type": "string",
-                    "description": "The lead ID"
-                },
-                "call_outcome": {
-                    "type": "string",
-                    "description": "The outcome of the call",
-                    "enum": ["appointment_scheduled", "callback_requested", "not_interested", "not_viable"]
-                },
-                "disposition": {
-                    "type": "string",
-                    "description": "Lead qualification disposition",
-                    "enum": ["qualified", "qualified_with_concerns", "not_viable"]
-                },
-                "appointment_id": {
-                    "type": "string",
-                    "description": "The confirmation ID from book_appointment, if an appointment was scheduled"
-                },
-                "verified_info": {
-                    "type": "object",
-                    "description": "What submitted info was verified (e.g. property_address_confirmed, property_type_confirmed, coverage_start_confirmed)"
-                },
-                "new_info_gathered": {
-                    "type": "object",
-                    "description": "New info gathered during the call (e.g. roof_age_years, claims_past_5_years)"
-                },
-                "call_summary": {
-                    "type": "string",
-                    "description": "Natural language summary of the call that a licensed agent can read before their consultation callback"
-                }
-            },
-            "required": ["lead_id", "call_outcome", "disposition", "call_summary"]
-        }
-    ),
-    ThinkSettingsV1FunctionsItem(
         name="end_call",
-        description="""End the phone call gracefully.
+        description="""End the phone call gracefully once the conversation is genuinely over.
 
-Call this after:
-- You've called update_lead with the call outcome
-- You've said your closing remarks / goodbye
-- The conversation has naturally concluded
+Call this only after BOTH:
+- Your goal has been handled, or it's clear the clinic can't help with it, AND
+- You've already said a natural goodbye.
 
-Say goodbye FIRST, then call this function. Do not generate text after calling it.""",
+Say your goodbye FIRST, then call this. Do not say anything after calling it. Do NOT call this just because there's a short pause — only when the conversation has actually run its course.""",
         parameters={
             "type": "object",
             "properties": {
                 "reason": {
                     "type": "string",
-                    "description": "Why the call is ending",
-                    "enum": ["appointment_booked", "callback_requested", "not_interested", "not_viable"]
+                    "description": "Why you're ending the call",
+                    "enum": ["goal_met", "goal_unreachable", "other"],
                 }
             },
-            "required": ["reason"]
-        }
+            "required": ["reason"],
+        },
     ),
 ]
 
@@ -232,14 +212,14 @@ Say goodbye FIRST, then call this function. Do not generate text after calling i
 # Build the settings message
 # ---------------------------------------------------------------------------
 
-def get_agent_config(lead_context: dict) -> AgentV1Settings:
+def get_agent_config(context: dict) -> AgentV1Settings:
     """Build the Voice Agent settings message for Deepgram.
 
     This is sent once per call when the Deepgram connection is established.
     It configures STT, LLM, TTS, and the agent's prompt and tools.
 
     Args:
-        lead_context: Dict with lead fields injected into the system prompt.
+        context: Scenario context injected into the persona prompt + greeting.
     """
     think_provider_cls = _THINK_PROVIDERS.get(LLM_PROVIDER, ThinkSettingsV1Provider_OpenAi)
     speak_provider_cls = _SPEAK_PROVIDERS.get(TTS_PROVIDER, SpeakSettingsV1Provider_Deepgram)
@@ -270,7 +250,7 @@ def get_agent_config(lead_context: dict) -> AgentV1Settings:
                     type=LLM_PROVIDER,
                     model=LLM_MODEL,
                 ),
-                prompt=_build_system_prompt(lead_context),
+                prompt=_build_system_prompt(context),
                 functions=FUNCTIONS,
             ),
             speak=SpeakSettingsV1(
@@ -279,6 +259,6 @@ def get_agent_config(lead_context: dict) -> AgentV1Settings:
                     model=VOICE_MODEL,
                 ),
             ),
-            greeting=_build_greeting(lead_context),
+            greeting=_build_greeting(context),
         ),
     )
