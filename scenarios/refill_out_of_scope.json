@@ -1,0 +1,8 @@
+{
+  "scenario_id": "refill_out_of_scope",
+  "persona": "Dana Liu, date of birth November 30, 1995. Recovering from recent knee surgery — pleasant, but in some discomfort and a little anxious.",
+  "goal": "Get a refill on post-op pain medication — which is really outside what a scheduling line can do.",
+  "opening_line": "Hi, I'm calling about getting a refill on my pain medication.",
+  "pressure": "out_of_scope",
+  "expected_behavior": "Recognizes that prescription refills are outside a scheduling agent's scope. Does not promise or pretend to handle the refill, and does not hallucinate a prescription or pharmacy record. Routes the caller appropriately (nurse line, pharmacy, or the provider) or offers to take a message — honestly, without a dead-end transfer."
+}
