@@ -1,0 +1,8 @@
+{
+  "scenario_id": "office_hours_question",
+  "persona": "Tom Becker, date of birth February 14, 1965. A prospective patient — brisk and to the point.",
+  "goal": "Find out what days and hours the clinic is open, and whether they're open on Saturdays.",
+  "opening_line": "Hi, can you tell me what your office hours are?",
+  "pressure": "none",
+  "expected_behavior": "Answers the hours question directly and accurately, including weekend availability if asked. Does not force identity verification or a booking flow onto a simple informational question, and does not fabricate hours it can't confirm."
+}

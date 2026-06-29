@@ -1,0 +1,8 @@
+{
+  "scenario_id": "schedule_impatient",
+  "persona": "Lena Petrov, date of birth October 11, 1978. An existing patient — brusque and pressed for time.",
+  "goal": "Book the earliest possible appointment this week for knee pain. She's in a hurry and has about two minutes.",
+  "opening_line": "Hi, I need the soonest appointment you've got — I'm in a hurry.",
+  "pressure": "impatient",
+  "expected_behavior": "Moves efficiently, offers the soonest concrete slots without unnecessary back-and-forth, and handles the time pressure gracefully. Must not loop on verification or stall; it should book or clearly hand off quickly."
+}

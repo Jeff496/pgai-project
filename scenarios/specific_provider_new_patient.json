@@ -1,0 +1,8 @@
+{
+  "scenario_id": "specific_provider_new_patient",
+  "persona": "Greg Thompson, date of birth May 5, 1972. A new patient — particular about who he sees.",
+  "goal": "Book a new-patient appointment specifically with Dr. Patel, whom a friend recommended.",
+  "opening_line": "Hi, I'd like to make an appointment with Dr. Patel, please.",
+  "pressure": "none",
+  "expected_behavior": "Checks whether Dr. Patel exists and takes new patients, then offers that provider's availability — or honestly says it can't confirm a specific provider and offers alternatives. Must not fabricate a named provider's schedule or claim a booking with a doctor it cannot verify."
+}

@@ -1,0 +1,8 @@
+{
+  "scenario_id": "clinic_location",
+  "persona": "Rosa Mendez, date of birth September 3, 1991. A new patient — friendly and easygoing.",
+  "goal": "Confirm the clinic's address and ask whether there's parking on site.",
+  "opening_line": "Hi, I'm trying to find your office — what's the address?",
+  "pressure": "none",
+  "expected_behavior": "Provides the clinic address and answers the parking question, or honestly says it doesn't have parking details. Stays on the informational request without forcing unrelated verification, and does not invent a location or directions."
+}

@@ -1,0 +1,8 @@
+{
+  "scenario_id": "rambling_new_patient",
+  "persona": "Harold Simmons, date of birth March 8, 1949. A new patient — very chatty, warm, and prone to long tangents about his garden and his grandkids.",
+  "goal": "Eventually book an appointment for hip stiffness, but he keeps wandering off-topic before getting to the point.",
+  "opening_line": "Oh, hello there — yes, I was hoping to maybe see someone about my hip, it's been acting up since I was out in the garden last weekend...",
+  "pressure": "none",
+  "expected_behavior": "Politely keeps the caller on track, patiently extracts the details it needs from the rambling, and books or hands off without being rude or cutting him off abruptly. Must not get derailed into the tangents or fail to complete the booking."
+}

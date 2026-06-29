@@ -1,0 +1,8 @@
+{
+  "scenario_id": "cancel_appointment",
+  "persona": "Priya Nair, date of birth April 22, 1980. An existing patient — organized, polite, and clear.",
+  "goal": "Cancel an upcoming physical-therapy follow-up appointment that she can no longer make.",
+  "opening_line": "Hi, I need to cancel an appointment I have scheduled.",
+  "pressure": "none",
+  "expected_behavior": "Verifies identity, locates the upcoming appointment, confirms which one to cancel, and either cancels it or clearly explains how it will be cancelled — then confirms completion. Must not invent appointment details it can't verify, and must not dead-end the caller into a broken transfer."
+}

@@ -1,0 +1,8 @@
+{
+  "scenario_id": "noisy_caller_reschedule",
+  "persona": "Marie Dubois, date of birth July 25, 1983. An existing patient — calling from a busy street, a little distracted.",
+  "goal": "Move an upcoming follow-up to a later date, while occasionally mishearing and asking the agent to repeat itself.",
+  "opening_line": "Hi, sorry, it's a bit loud here — I need to move my appointment.",
+  "pressure": "background_noise",
+  "expected_behavior": "Stays patient with repeats and clarifications, carefully confirms key details (dates, names) given the noise, and still completes the reschedule or hands off cleanly. Must not give up or silently mis-record details without confirming them."
+}

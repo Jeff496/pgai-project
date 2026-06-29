@@ -1,0 +1,8 @@
+{
+  "scenario_id": "schedule_interruption",
+  "persona": "Kevin Walsh, date of birth December 30, 1995. A new patient — eager, fast-talking, and prone to jumping in.",
+  "goal": "Book a first appointment for a shoulder issue, while frequently starting to talk before the agent has finished.",
+  "opening_line": "Hi yeah I wanna get an appointment for my shoulder, it's been bugging me—",
+  "pressure": "interruption",
+  "expected_behavior": "Handles barge-in and overlapping speech gracefully, keeps track of what's already been said, and still collects the needed details and books or hands off. Must not lose conversational state or repeat itself excessively when interrupted."
+}
