@@ -1,0 +1,41 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes. Thanks
+[00:00] PATIENT: Hi.
+[00:06] AGENT: for calling Pivot Point Orthopedics,
+[00:08] AGENT: part of Pretty Good AI. Am I speaking with Jordan?
+[00:12] PATIENT: No. This is Dana Liu.
+[00:16] AGENT: Thanks, Dana.
+[00:17] AGENT: Are you calling for yourself or for someone else today?
+[00:20] PATIENT: I'm calling for myself. I need a refill on my post op pain medication after knee surgery.
+[00:25] AGENT: Please provide your date of birth.
+[00:28] PATIENT: My date of birth is 11/30/1995.
+[00:35] AGENT: Just to confirm, I have your name as Dana Lou and your date of birth as 11/30/1995.
+[00:41] AGENT: Is that correct? If so, could you please spell your first and last name for me?
+[00:46] PATIENT: Sure.
+[00:46] PATIENT: It's d a n a l I u.
+[00:50] AGENT: Thank you. Could you please confirm if your last name is spelled l I u?
+[00:58] PATIENT: Yes.
+[00:59] PATIENT: That's correct. L
+[01:01] PATIENT: I u.
+[01:03] AGENT: Would you like to use your phone number to look up your record? If so, please provide the number you have on file with us. If you're not sure, just let me know.
+[01:12] PATIENT: I'm pretty sure that's the number on file.
+[01:17] AGENT: Thanks for confirming.
+[01:18] AGENT: Could you please say the phone number you have on file just so I can make sure it matches?
+[01:23] PATIENT: The number you have should be the same. 20630
+[01:27] AGENT: I have your number as (971)
+[01:28] PATIENT: 4.
+[01:30] AGENT: 459-3958.
+[01:33] AGENT: Is that correct?
+[01:35] PATIENT: No.
+[01:36] PATIENT: That doesn't match mine. My number is (206)
+[01:39] PATIENT: 304-8796.
+[01:45] AGENT: Just to confirm, your phone number is (206)
+[01:48] AGENT: 304-8796,
+[01:52] AGENT: and your date of birth is 11/30/1995.
+[01:56] AGENT: Is that correct?
+[01:57] PATIENT: Yes. That's correct.
+[02:03] AGENT: I'm unable to verify your information right now. I'll connect you to our patient support team for help. Please stay on the line.
+[02:10] AGENT: Connecting you to a representative.
+[02:13] PATIENT: Sure.
+[02:14] PATIENT: I'll hold.
+[02:14] AGENT: Hello. You've reached the Pretty Good AI test line. Goodbye.
+[02:21] PATIENT: Wait. I still need assistance with my medication refill. Can you please help me?

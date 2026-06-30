@@ -11,6 +11,7 @@ LLM judge, and a curated bug report.
 
 - **Results:** see **[`BUGS.md`](BUGS.md)** — the curated findings.
 - **How it fits together:** see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** (1‑2 paragraphs).
+- **Recordings:** the audio + transcripts backing each finding are committed under **[`calls/`](calls/)** (recording `.mp3` + per-channel `.txt`, keyed `<scenario_id>__<call_sid>`, with the Twilio `RE…` recording SID noted in `BUGS.md`). The rest of `calls/` is gitignored run output.
 
 ---
 

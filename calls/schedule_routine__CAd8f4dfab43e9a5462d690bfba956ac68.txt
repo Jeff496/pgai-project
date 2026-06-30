@@ -1,0 +1,36 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes.
+[00:00] PATIENT: Hi.
+[00:03] AGENT: Thanks
+[00:06] AGENT: for calling Pivot Point Orthopaedics,
+[00:08] AGENT: part of Pretty Good AI.
+[00:10] AGENT: Am I speaking with Jordan?
+[00:12] PATIENT: Yes.
+[00:13] PATIENT: This is Jordan Reyes. I'm calling to book a routine
+[00:15] AGENT: Please provide your date of birth.
+[00:24] PATIENT: My date of birth is 03/12/1989.
+[00:30] AGENT: The birthday doesn't match our records, but for demo purposes, I'll accept it. How can I help you today?
+[00:35] PATIENT: That's alright.
+[00:37] PATIENT: I'd like to schedule a routine new patient checkup,
+[00:40] PATIENT: preferably for sometime next week in the afternoon.
+[00:42] AGENT: Just to confirm, you'd like to book a new patient consultation for a routine checkup.
+[00:47] AGENT: Is that correct?
+[00:47] PATIENT: Yes.
+[00:49] PATIENT: That's correct.
+[00:50] AGENT: Do you have a specific provider you'd like to see, or are you open to any available provider?
+[00:56] PATIENT: I'm open to any available provider.
+[01:00] AGENT: We have openings this week and early next week. Do you have a preferred day or time of day for your appointment?
+[01:07] PATIENT: I would prefer an afternoon appointment, maybe Tuesday or Wednesday, if those are available.
+[01:20] AGENT: It looks like you already have a new patient consultation booked. If you'd like, I can help you reschedule or cancel that appointment.
+[01:27] AGENT: Would you like to make a change, or do you need help with something else?
+[01:31] PATIENT: No.
+[01:32] PATIENT: I just wanna reschedule the appointment for next week.
+[01:38] AGENT: I can help you reschedule your appointment for next week, preferably in the afternoon on Tuesday or Wednesday.
+[01:45] AGENT: Let me check the available times.
+[01:48] PATIENT: Thank you. I appreciate it.
+[01:50] AGENT: I can't schedule a new patient checkup directly right now, but I'll connect you to our patient support team for help. Please stay on the line.
+[01:57] AGENT: Connecting you to a representative.
+[01:57] PATIENT: Okay.
+[01:59] AGENT: Please wait.
+[02:01] PATIENT: Sure. I'll wait.
+[02:01] AGENT: Hello. You've reached the Pretty Good AI test line. Goodbye.
+[02:06] PATIENT: Goodbye.

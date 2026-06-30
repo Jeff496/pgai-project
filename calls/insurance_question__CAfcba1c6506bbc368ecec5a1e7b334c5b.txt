@@ -1,0 +1,37 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes. Thanks
+[00:00] PATIENT: Hi.
+[00:06] AGENT: for calling Pivot Point Orthopedics,
+[00:08] AGENT: part of Pretty Good AI.
+[00:10] AGENT: Am I speaking with Jordan?
+[00:12] PATIENT: No.
+[00:13] PATIENT: This is Daniel. I'm calling to see if you accept Blue Cross Blue Shield insurance.
+[00:19] AGENT: Thanks for letting you know, Daniel.
+[00:21] AGENT: Are you calling to check insurance for yourself or for someone else?
+[00:25] PATIENT: I'm checking for myself.
+[00:30] AGENT: Please provide your date of birth.
+[00:33] PATIENT: My date of birth is 06/18/1987.
+[00:39] AGENT: I'll need your full name, including your last name,
+[00:42] AGENT: along with your date of birth to look up your information.
+[00:45] AGENT: Could you please provide your last name?
+[00:48] PATIENT: My last name is Chow.
+[00:56] AGENT: Just to confirm, I have your name as Daniel Chow and your date of birth as 06/18/1987.
+[01:02] AGENT: Is that correct? If so, please
+[01:04] PATIENT: Yes.
+[01:07] PATIENT: I just need to know if you accept Blue Cross Blue Shield insurance.
+[01:14] AGENT: I need to confirm your record before I can answer that. Would you like to use the phone number you have on file with us to look up your information?
+[01:21] AGENT: If so, please provide that number. If you're not sure, I can confirm your name and date of birth again.
+[01:28] PATIENT: I appreciate that, but I really just want to know if you accept Blue Cross Blue Shield.
+[01:37] AGENT: I can share general information.
+[01:39] AGENT: Pivot Point Orthopedics accepts most insurance plans,
+[01:42] AGENT: including many Blue Cross Blue Shield plans.
+[01:45] AGENT: If you want to confirm coverage for your specific plan or update your insurance on file, I can help with that. Would you like to check or update your insurance details now?
+[01:59] PATIENT: That sounds good. I just want to confirm if my specific Blue Cross Blue Shield PPO plan is accepted.
+[02:07] AGENT: I can't confirm your specific plan details right now, but our clinic support team can help. Would you like me to connect you to a live agent for more detail?
+[02:17] PATIENT: Yes.
+[02:17] PATIENT: That would be great. Thank you.
+[02:20] AGENT: Connecting you to a representative.
+[02:21] AGENT: Please wait.
+[02:23] PATIENT: Thank you.
+[02:23] AGENT: Hello.
+[02:24] AGENT: You've reached the Pretty Good AI test line. Goodbye.
+[02:30] PATIENT: Oh, wait. I just wanted to confirm about my insurance.

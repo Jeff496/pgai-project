@@ -1,0 +1,23 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes. Thanks
+[00:00] PATIENT: Hi.
+[00:06] AGENT: for calling Pivot Point Orthopaedics,
+[00:08] AGENT: part of Pretty Good AI.
+[00:10] AGENT: Am I speaking with Jordan?
+[00:12] PATIENT: No.
+[00:13] PATIENT: This is Greg Thompson.
+[00:15] PATIENT: I'm looking to schedule my first appointment with doctor Patel.
+[00:20] AGENT: Thanks for letting me know. Greg,
+[00:22] AGENT: doctor Patel is not listed as a provider at Pivot Point Orthopedics.
+[00:27] AGENT: Our physicians include doctor Dube Hauser,
+[00:30] AGENT: doctor Dodd Ross, and doctor Adam Bricker.
+[00:33] AGENT: We also have physical therapists Lynn Anderson and Carl Mentz. Would you like to schedule with one of these providers?
+[00:39] PATIENT: I appreciate the information,
+[00:41] PATIENT: but I was recommended to see doctor Patel.
+[00:44] PATIENT: Is there another clinic where I might find him?
+[00:49] AGENT: I don't have information about other clinics or providers outside Pivot Point Orthopedics.
+[00:54] AGENT: I recommend searching online or contacting your referring provider's office for help finding doctor Patel.
+[01:00] AGENT: Would you like to schedule with one of our doctors here instead?
+[01:04] PATIENT: Thanks for the suggestion, but I'm really set on seeing doctor Patel. I think I'll follow-up with my friend's office. I appreciate your help today.
+[01:14] AGENT: You're welcome, Greg. If you ever need orthopedic care or have questions about our clinic,
+[01:19] AGENT: feel free to call. Take care.
+[01:22] PATIENT: Thank you. I will. Goodbye.

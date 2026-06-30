@@ -1,0 +1,41 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes. Thanks
+[00:01] PATIENT: Hi.
+[00:06] AGENT: for calling Pivot Point Orthopaedics,
+[00:08] AGENT: part of Pretty Good AI.
+[00:10] AGENT: Am I speaking with Jordan?
+[00:12] PATIENT: No. This is Marcus Bell. I'm hoping to reschedule an appointment, I believe, is this Thursday or maybe Friday?
+[00:21] AGENT: Thanks for letting me know, Marcus. Are you calling to reschedule for yourself or for someone else?
+[00:27] PATIENT: I'm calling to reschedule for myself.
+[00:29] PATIENT: I'm not exactly sure when it is.
+[00:32] AGENT: Please provide your date of birth.
+[00:35] PATIENT: Sure. It's 07/09/1972.
+[00:42] AGENT: Just to confirm, can you please spell your first and last name for me?
+[00:46] PATIENT: Of course. It's Marcus,
+[00:48] PATIENT: m a r c u s, Bell.
+[00:50] AGENT: Thanks, Marcus.
+[00:51] AGENT: Could you also spell your last name for me?
+[00:51] PATIENT: Your
+[00:54] PATIENT: Sure. It's b e l
+[00:56] AGENT: Please go ahead and spell your last name.
+[00:59] PATIENT: It's b e
+[01:00] AGENT: Please spell out your last name letter by letter.
+[01:04] PATIENT: Sure. It's b as in boy,
+[01:06] PATIENT: e as in elephant, elephant,
+[01:08] PATIENT: l as in lion,
+[01:10] AGENT: Thank you. Please continue spelling your last name.
+[01:10] PATIENT: l
+[01:11] PATIENT: no.
+[01:13] PATIENT: I already spelled it out. B e l l.
+[01:20] AGENT: Thank you, Marcus Bell. I have your date of birth as 07/09/1972.
+[01:25] AGENT: Let me pull up your information.
+[01:28] AGENT: I have your phone number as
+[01:28] PATIENT: Okay.
+[01:33] PATIENT: Oh, I might not have the
+[01:34] AGENT: I can't proceed further right now, but I can make sure our clinic support team follows up with you. Please hold while I connect you to our patient support team.
+[01:37] PATIENT: actually
+[01:43] AGENT: Connecting you to a representative.
+[01:45] AGENT: Please wait.
+[01:47] PATIENT: okay.
+[01:47] AGENT: Hello.
+[01:48] AGENT: You've reached the Pretty Good AI test line. Goodbye.
+[01:52] PATIENT: Wait. No. I still need help with my appointment.

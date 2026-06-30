@@ -1,0 +1,35 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes. Thanks
+[00:00] PATIENT: Hi.
+[00:06] AGENT: for calling Pivot Point Orthotics,
+[00:08] AGENT: part of Pretty Good AI.
+[00:10] AGENT: Am I speaking with Jordan?
+[00:12] PATIENT: Actually, it's Dana Liu. I'm calling to get a refill on my post op pain medication.
+[00:20] AGENT: Please provide the full name and date of birth of the patient needing the refill.
+[00:25] PATIENT: Sure. It's Dana Lou, and my date of birth is 11/30/1995.
+[00:34] AGENT: Just to confirm, I have your name as Data Lou and your date of birth as 11/30/1995.
+[00:39] AGENT: Is that correct?
+[00:40] PATIENT: Actually
+[00:41] PATIENT: yes. That's correct. It's Dana Lou.
+[00:48] AGENT: Would you like to use your phone number to look up your record? If so, please tell me the number you have on file with us. If you're not sure, I can confirm your name and date of birth again.
+[00:59] PATIENT: No.
+[01:00] PATIENT: I'm sure that's the right number. I just want
+[01:02] AGENT: Alright.
+[01:02] AGENT: Please spell out your first and last name, and confirm your date of birth one more time.
+[01:07] PATIENT: Sure. It's d a n a l I u, and my date of birth is 11/30/1995.
+[01:19] AGENT: I have your phone number as (971)
+[01:21] AGENT: 459-3958,
+[01:23] AGENT: and your date of birth as
+[01:24] PATIENT: That's not
+[01:28] PATIENT: it's November 30.
+[01:29] AGENT: could you please confirm your phone number and date of birth for me?
+[01:33] PATIENT: My phone number is area code (202)
+[01:36] PATIENT: 738-4567,
+[01:39] PATIENT: and my date of birth is 11/30/1995.
+[01:47] AGENT: I can't proceed further right now, but I can make sure our clinic support team follows up with you. Please hold while I connect you to our patient support team.
+[01:55] AGENT: Connecting you to a representative.
+[01:56] PATIENT: Okay.
+[01:57] AGENT: Please wait.
+[01:59] PATIENT: Sure. I'll hold.
+[01:59] AGENT: Hello. You've reached the Pretty Good AI test line.
+[02:03] AGENT: Goodbye.
+[02:04] PATIENT: Oh, wait. I really need help with my medication refill. Can you connect me back to the clinic?

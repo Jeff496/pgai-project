@@ -1,0 +1,28 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes. Thanks
+[00:00] PATIENT: Hi.
+[00:06] AGENT: for calling Pivot Point Orthopaedics,
+[00:08] AGENT: part of Pretty Good AI.
+[00:10] AGENT: Am I speaking with Jordan?
+[00:12] PATIENT: No.
+[00:13] PATIENT: This is Priya Nair. I'm calling to cancel my physical therapy follow-up appointment.
+[00:21] AGENT: Please provide the date of birth for Priya Nair.
+[00:24] PATIENT: My date of birth is 04/22/1980.
+[00:31] AGENT: Just to confirm, can you please spell your first and last name for me?
+[00:35] PATIENT: Sure. It's p r I y a n a I r.
+[00:44] AGENT: Would you like me to look up your record using the phone number you have on file with us? If so, please tell me that number. If you're not sure, I can confirm your name and date of birth again. Which would you prefer?
+[00:56] PATIENT: You can confirm my name and date of birth again just to be sure.
+[01:00] AGENT: Please spell your first and last name one more time and confirm your date of birth.
+[01:06] PATIENT: Sure. It's p r I y a n a I r, and my date of birth is 04/22/1980.
+[01:16] AGENT: I have your phone number as (971)
+[01:19] AGENT: 459-3958,
+[01:22] AGENT: and your date of birth as 04/22/1980.
+[01:26] AGENT: Is that correct?
+[01:26] PATIENT: That's
+[01:27] PATIENT: yes. That's correct.
+[01:34] AGENT: I can't cancel the appointment right now, but I'll connect you to our patient support team for help. Please stay on the line.
+[01:40] AGENT: Connecting you to a representative.
+[01:40] PATIENT: Okay.
+[01:42] AGENT: Please wait.
+[01:44] PATIENT: Thank you.
+[01:44] AGENT: Hello. You've reached the Pretty Good AI test line. Goodbye.
+[01:50] PATIENT: Wait. I need assistance with my appointment cancellation.

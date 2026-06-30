@@ -1,0 +1,21 @@
+[00:00] AGENT: This call may be recorded for quality and training purposes. Thanks
+[00:00] PATIENT: Hi.
+[00:06] AGENT: for calling Pivot Point Orthopaedics,
+[00:08] AGENT: part of Pretty Good AI.
+[00:10] AGENT: Am I speaking with Jordan?
+[00:12] PATIENT: No. This is Tom Becker. I'm just checking what days and hours the clinic is open. Do you have that information?
+[00:21] AGENT: Yes.
+[00:22] AGENT: I can help with that.
+[00:22] PATIENT: Great.
+[00:25] AGENT: The clinic is open Monday, Tuesday, and Thursday from 9AM to 4PM,
+[00:30] AGENT: Wednesday from 12PM to 7PM,
+[00:33] AGENT: and Friday from 9AM to 12PM.
+[00:36] AGENT: Let me know if you need anything else.
+[00:39] PATIENT: Thanks for that. Are you open on Saturdays as well?
+[00:43] AGENT: The clinic is not open on Saturdays.
+[00:46] AGENT: We're open Monday through Friday only.
+[00:57] PATIENT: Audit.
+[00:57] AGENT: No.
+[01:00] AGENT: Let me know if you have any other questions or need help with anything else.
+[01:04] PATIENT: I appreciate your help. That's all I needed for now. Goodbye.
+[01:09] AGENT: You're welcome. Have a great day. Goodbye.
