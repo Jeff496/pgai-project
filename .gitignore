@@ -28,6 +28,9 @@ Thumbs.db
 # Per-call artifacts (logs, recordings, transcripts, outcomes)
 calls/
 
+# Uncurated judge output (BUGS.md is the curated, committed deliverable)
+CANDIDATE_BUGS.md
+
 # Misc
 .cursorindexingignore
 .specstory/
