@@ -166,20 +166,27 @@ class VoiceAgentSession:
             logger.error(f"[SESSION:{self.call_sid}] Timeout waiting for settings to be applied")
             raise
 
-        # Start silence monitor — timer begins on the first AgentAudioDone
-        # (which fires after the agent speaks its greeting)
+        # Start silence monitor — timer begins on the first AgentAudioDone,
+        # which now fires after the agent's first real turn (its reply once the
+        # remote agent has finished greeting), since there's no hard greeting.
         self._silence_monitor = SilenceMonitor(
             connection=self._connection,
             call_sid=self.call_sid,
             on_timeout=self._handle_silence_timeout,
         )
 
-        # Discard buffered audio - it's just the person's "Hello?" and silence
-        # during AMD detection.  Flushing it would trigger barge-in and cut off
-        # the agent's greeting.  The greeting re-establishes the conversation.
+        # Flush buffered audio to Deepgram instead of discarding it.  There's no
+        # hard greeting to protect anymore (the agent waits for the remote side
+        # to speak first), so this buffer may hold the very start of the
+        # agent-under-test's opening — forwarding it avoids clipping their
+        # greeting.  Drain FIFO while still in "buffering" mode; run() flips to
+        # "forwarding" right after with no await in between, so no chunk is lost
+        # or reordered.
         if self._audio_buffer:
-            logger.info(f"[SESSION:{self.call_sid}] Discarding {len(self._audio_buffer)} buffered audio chunks (AMD wait)")
-            self._audio_buffer.clear()
+            logger.info(f"[SESSION:{self.call_sid}] Flushing {len(self._audio_buffer)} buffered audio chunks to Deepgram")
+        while self._audio_buffer:
+            chunk = self._audio_buffer.pop(0)
+            await self._connection.send_media(chunk)
 
     async def _deliver_voicemail(self):
         """Deliver voicemail via Deepgram Aura-2 TTS."""
