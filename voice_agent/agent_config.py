@@ -124,6 +124,7 @@ def _build_system_prompt(context: dict) -> str:
     """
     persona = context.get("persona") or DEFAULT_PERSONA
     goal = context.get("goal") or DEFAULT_GOAL
+    opening_line = _opening_line(context)
     pressure = context.get("pressure") or "none"
     pressure_note = _PRESSURE_BEHAVIORS.get(pressure, "")
 
@@ -158,6 +159,9 @@ WHO YOU ARE:
 WHY YOU'RE CALLING:
 {goal}
 
+HOW TO OPEN:
+You placed this call, so the front desk picks up and speaks first. Wait for them to finish their greeting — including any "this call may be recorded" notice and any question like "who am I speaking with?" — and only speak once it's clearly your turn. Then open with something like: "{opening_line}" — said naturally in your own words, not read word for word. Do not talk over their greeting.
+
 VOICE FORMATTING RULES:
 You are a VOICE agent. Your responses are spoken aloud via text-to-speech.
 - Use only plain conversational language
@@ -172,8 +176,13 @@ HOW TO BEHAVE:
 """
 
 
-def _build_greeting(context: dict) -> str:
-    """The caller's opening line, spoken first when the call connects."""
+def _opening_line(context: dict) -> str:
+    """The caller's intended opening line.
+
+    No longer spoken as a hard Deepgram greeting — it's woven into the system
+    prompt as guidance so the LLM opens on its own turn, *after* the agent under
+    test has finished greeting (see HOW TO OPEN in the prompt).
+    """
     return context.get("opening_line") or DEFAULT_OPENING_LINE
 
 
@@ -219,7 +228,8 @@ def get_agent_config(context: dict) -> AgentV1Settings:
     It configures STT, LLM, TTS, and the agent's prompt and tools.
 
     Args:
-        context: Scenario context injected into the persona prompt + greeting.
+        context: Scenario context injected into the persona prompt (persona,
+                 goal, opening line, pressure).
     """
     think_provider_cls = _THINK_PROVIDERS.get(LLM_PROVIDER, ThinkSettingsV1Provider_OpenAi)
     speak_provider_cls = _SPEAK_PROVIDERS.get(TTS_PROVIDER, SpeakSettingsV1Provider_Deepgram)
@@ -259,6 +269,10 @@ def get_agent_config(context: dict) -> AgentV1Settings:
                     model=VOICE_MODEL,
                 ),
             ),
-            greeting=_build_greeting(context),
+            # No `greeting`: a hard greeting makes Deepgram's TTS speak the
+            # instant Settings are applied — talking over the agent-under-test's
+            # "this call may be recorded" disclosure.  Leaving it unset makes the
+            # agent wait for the remote side to speak first; the LLM then opens
+            # on its own turn per HOW TO OPEN in the system prompt.
         ),
     )

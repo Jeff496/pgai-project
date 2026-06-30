@@ -10,7 +10,8 @@ Schema (see scenarios/*.json):
   scenario_id        short stable id; keys all artifacts as <scenario_id>__<call_sid>
   persona            who the caller is (name, DOB, temperament)
   goal               what they're trying to accomplish on the call
-  opening_line       the caller's first spoken line (used as the greeting)
+  opening_line       the caller's intended opening, spoken on their turn after
+                     the agent greets (woven into the prompt, not a hard greeting)
   pressure           a twist on the call: none | ambiguous_date | interruption |
                      out_of_scope | background_noise | impatient
   expected_behavior  what a CORRECT agent should do — fuel for the judge pass
